@@ -2,6 +2,7 @@
  * jinclude.h
  *
  * Copyright (C) 1991-1994, Thomas G. Lane.
+ * Modified 2017 by Guido Vollbeding.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -79,29 +80,18 @@
 
 #define SIZEOF(object)	((size_t) sizeof(object))
 
+/*
+ * The modules that use fread() and fwrite() always invoke them through
+ * these macros.  On some systems you may need to twiddle the argument casts.
+ * CAUTION: argument order is different from underlying functions!
+ *
+ * Furthermore, macros are provided for fflush() and ferror() in order
+ * to facilitate adaption by applications using an own FILE class.
+ */
 
-#if defined(LIBJPEG_EA_SUPPORT_ENABLED) && LIBJPEG_EA_SUPPORT_ENABLED
-
-    /* We define this so that we can assert elsewhere that it is defined, */
-    /* simply as a sanity check. */
-    #define LIBJPEG_EA_JREAD_REDEFINED 1
-
-    #include "jsupport_ea.h"
-
-    #define JFREAD(file,buf,sizeofbuf)  \
-      ((size_t) (*gpRead)((file), (void *) (buf), (size_t) (sizeofbuf)))
-    #define JFWRITE(file,buf,sizeofbuf)  \
-      ((size_t) (*gpWrite)((file), (const void *) (buf), (size_t) (sizeofbuf)))
-
-#else
-    /*
-     * The modules that use fread() and fwrite() always invoke them through
-     * these macros.  On some systems you may need to twiddle the argument casts.
-     * CAUTION: argument order is different from underlying functions!
-     */
-
-    #define JFREAD(file,buf,sizeofbuf)  \
-      ((size_t) fread((void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
-    #define JFWRITE(file,buf,sizeofbuf)  \
-      ((size_t) fwrite((const void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
-#endif
+#define JFREAD(file,buf,sizeofbuf)  \
+  ((size_t) fread((void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
+#define JFWRITE(file,buf,sizeofbuf)  \
+  ((size_t) fwrite((const void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
+#define JFFLUSH(file)	fflush(file)
+#define JFERROR(file)	ferror(file)
