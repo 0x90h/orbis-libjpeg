@@ -17,9 +17,19 @@ AllTarget = $(OutPath)/$(TargetFile).a
 
 include $(Ps4Sdk)/make/ps4sdk.mk
 
-CompilerFlags += #-DLIBJEG_JSUPPORT_EA_H
+CompilerFlags += -MD -MP    #-DLIBJPEG_EA_SUPPORT_ENABLED
 
 $(OutPath)/$(TargetFile).a: $(ObjectFiles)
 	$(dirp)
 	$(archive)
 
+#jconfig.h jerror.h jmemsys.h jmorecfg.h jpeglib.h jsupport_ea.h 
+install:
+	@cp $(OutPath)/$(TargetFile).a $(Ps4Sdk)/lib
+	@cp include/jconfig.h $(Ps4Sdk)/include
+	@cp include/jerror.h $(Ps4Sdk)/include
+	@cp include/jmemsys.h $(Ps4Sdk)/include
+	@cp include/jmorecfg.h $(Ps4Sdk)/include
+	@cp include/jpeglib.h $(Ps4Sdk)/include
+	@cp include/jsupport_ea.h $(Ps4Sdk)/include
+	@echo "Installed!" 
