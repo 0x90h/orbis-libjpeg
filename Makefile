@@ -17,7 +17,7 @@ AllTarget = $(OutPath)/$(TargetFile).a
 
 include $(Ps4Sdk)/make/ps4sdk.mk
 
-CompilerFlags += -MD -MP
+CompilerFlags +=
 
 $(OutPath)/$(TargetFile).a: $(ObjectFiles)
 	$(dirp)
